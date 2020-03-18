@@ -26,16 +26,18 @@ class App extends Component {
   }
 
   handeAddCity = () => {
-    fetch('/api/cities', {
-      method: 'post',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ city: this.state.newCityName })
-    })
-    .then(res => res.json())
-    .then(res => {
-      this.getCityList();
-      this.setState({ newCityName: '' });
-    })
+    if(this.state.newCityName){
+      fetch('/api/cities', {
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ city: this.state.newCityName })
+      })
+      .then(res => res.json())
+      .then(res => {
+        this.getCityList();
+        this.setState({ newCityName: '' });
+      })
+    }
   }
 
   getWeather = city => {
@@ -47,7 +49,10 @@ class App extends Component {
   }
 
   handleChangeCity = (e) => { 
-    this.getWeather(e.target.value)
+    console.log('hey',e.target.value)
+    if(e.target.value){
+      this.getWeather(e.target.value)
+    }
   }
 
   componentDidMount () {
