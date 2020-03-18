@@ -1,26 +1,100 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import { Container, Navbar, NavbarBrand, Input, InputGroupAddon,
+  Row, Col, Jumbotron, InputGroup, Button, FormGroup } from 'reactstrap';
+import Weather from './Weather';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  state = {
+    weather: '',
+    cityList: [],
+    newCityName: ''
+  }
+
+  getCityList = () => {
+    fetch('/api/cities')
+    .then(res => res.json())
+    .then(res => {
+      const cityList = res.map(row => row.city_name);
+      this.setState({ cityList })
+    })
+  }
+
+  handleInputChange = (e) => {
+    this.setState({
+      newCityName: e.target.value
+    })
+  }
+
+  handeAddCity = () => {
+    fetch('/api/cities', {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ city: this.state.newCityName })
+    })
+    .then(res => res.json())
+    .then(res => {
+      this.getCityList();
+      this.setState({ newCityName: '' });
+    })
+  }
+
+  getWeather = city => {
+    fetch(`/api/weather/${city}`)
+    .then(res => res.json())
+    .then(weather => {
+      console.log(weather);
+      this.setState({ weather })
+    })
+  }
+
+  handleChangeCity = (e) => { 
+    this.getWeather(e.target.value)
+  }
+
+  componentDidMount () {
+    this.getCityList();
+  }
+
+  render(){
+    return (
+      <Container fluid className='centered'>
+        <Navbar dark color='dark'>
+          <NavbarBrand href='/'>MyWeather</NavbarBrand>
+        </Navbar>
+        <Row>
+          <Col>
+            <Jumbotron> 
+              <h1 className="display-3">My Weather</h1>
+              <p className="lead">The current weather for your favorite cities!</p>
+              <InputGroup>
+                <Input 
+                placeholder='New city name'
+                value={this.state.newCityName}
+                onChange={this.handleInputChange}
+                />
+                <InputGroupAddon addonType='append'>
+                  <Button color='primary' onClick={this.handeAddCity}>Add City</Button>
+                </InputGroupAddon>
+              </InputGroup>
+            </Jumbotron>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <h1 className="display-5">Current Weather</h1>
+            <FormGroup>
+              <Input type='select' onChange={this.handleChangeCity}>
+                { !this.state.cityList.length && <option>No cities added yet.</option> }
+                { this.state.cityList.length && <option>Select a city.</option> }
+                {  this.state.cityList.map((city, i) =>  <option key={i}>{city}</option>) }
+              </Input>
+            </FormGroup>
+          </Col>
+        </Row>
+        <Weather data={this.state.weather}/>
+      </Container>
+    );
+  }
 }
 
 export default App;

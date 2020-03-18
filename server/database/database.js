@@ -1,4 +1,4 @@
-const { Pool } = require('pg');
+var { Pool } = require('pg');
 
 const CONNECTION_STRING = process.env.DATABASE_URL || 'postgresql://postgres:Kreator18@localhost:5432/weather-db';
 const SSL = process.env.NODE_ENV === 'production';
@@ -42,3 +42,4 @@ class Database {
 }
 
 module.exports = new Database();
+
