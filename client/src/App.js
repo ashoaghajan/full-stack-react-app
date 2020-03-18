@@ -25,8 +25,12 @@ class App extends Component {
     })
   }
 
+  cityNameExists = cityName => {
+    return this.state.cityList.find(city => city.toLowerCase() === cityName.toLowerCase());
+  }
+
   handeAddCity = () => {
-    if(this.state.newCityName){
+    if(this.state.newCityName && !this.cityNameExists(this.state.newCityName)){
       fetch('/api/cities', {
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
@@ -46,10 +50,10 @@ class App extends Component {
     .then(weather => {
       this.setState({ weather })
     })
+    .then(() => console.log(this.state.cityList))
   }
 
   handleChangeCity = (e) => { 
-    console.log('hey',e.target.value)
     if(e.target.value){
       this.getWeather(e.target.value)
     }
