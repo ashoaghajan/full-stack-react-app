@@ -1,10 +1,10 @@
-var express = require('express');
-var Weather = require('../models/weather');
+const express = require('express');
+const Weather = require('../models/weather');
 
-var router = express.Router();
+const router = express.Router();
 
 router.get('/:city', (req, res) => {
-  var city = req.params.city;
+  const city = req.params.city;
 
   Weather.retrieveByCity(city, (err, weather) => {
     if (err) 

@@ -8,6 +8,10 @@ const Weather = ({ data }) => {
 
     if(!data){
         return null
+    } else if (data.error){
+        return (
+            <p>No such city exists.</p>
+        )
     } else {
         const { temp_max, temp_min, temp } = data.main;
         const maxTempC = convertToC(temp_max)

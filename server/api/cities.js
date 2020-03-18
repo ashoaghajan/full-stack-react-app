@@ -1,7 +1,7 @@
-var express = require('express');
-var Cities = require('../models/cities');
+const express = require('express');
+const Cities = require('../models/cities');
 
-var router = express.Router();
+const router = express.Router();
 
 router.get('/', (req, res) => {
   Cities.retrieveAll((err, cities) => {
@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  var city = req.body.city;
+  const city = req.body.city;
 
   Cities.insert(city, (err, result) => {
     if (err)
