@@ -50,7 +50,6 @@ class App extends Component {
     .then(weather => {
       this.setState({ weather })
     })
-    .then(() => console.log(this.state.cityList))
   }
 
   handleChangeCity = (e) => { 
